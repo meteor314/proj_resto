@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+<style>
+body {margin:0;}
+
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+.navbar a {
+  text-align : center;
+  float : right;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+
+}
+
+.navbar a:hover {
+  background: #ddd;
+  color: black;
+
+}
+
+
+</style>
+<body>
+
+<div class="navbar">
+  <a href="#Goro"style="float :left;font-weight:700;">Proj_resto</a>
+  <a href="#" onclick="disconnect()">Se-deconnecter.</a>
+  <a href="#home">Home</a>
+  <a href="commande.php">Commander un plat.</a>
+</div>
+<script type="text/javascript">
+    function disconnect(){
+      if(confirm("Vous êtes sur le point de se déconecter ? ")) {
+        window.location.href="deconnecter.php";
+      }
+    }
+</script>
