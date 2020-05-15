@@ -1,6 +1,13 @@
 <?php
-session_start();
-require('connect_db.php');
+	session_start();
+	/* =============== Data base connexion =============*/
+	try {
+		$db =new PDO("mysql:host=localhost;dbname=proj_resto",'root','');
+		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	} catch (PDOException $e) {
+		echo $e->getMessage();
+	}
 
 	function secure($n){
 			$n = htmlspecialchars($n);
@@ -10,33 +17,32 @@ require('connect_db.php');
 			return $n;
 	}
 
-if(!empty($_SESSION['id'])) {
-	  header('Location: profil.php?id='.$_SESSION['id']);
-}
-
 if(isset($_POST['submitBtn']) ) {
 	if(!empty($_POST['email']) && !empty($_POST['pwd'])) {
 	  	$email = secure($_POST['email']);
 	  	$pwd = ($_POST['pwd']);
 
-	  	$request =  $db->prepare("SELECT *  FROM member WHERE email  =  ? ");
-	  	$request->execute(array($email));
-	  	$userDefinded = $request->rowCount() ;
-
-	  	if($userDefinded  ==  1) {
+	  	$request =  $db->prepare("SELECT *  FROM administrateur WHERE email  =  ? ");
+		  $request->execute(array($email));
+	      $userDefinded = $request->rowCount() ;
+	
+	  	if($email  ==  "admin") {
+			echo($email);
 	  		$info = $request->fetch();
 	  		var_dump($info);//($info);
-		    if(password_verify($pwd, $info['pwd'])){
+		    if($pwd == "admin") {
 		        $userinfo = $request->fetch();
 		          // confirm mail
-			            $_SESSION['id'] = $info['id'];
+			            $_SESSION['admin'] = $info['admin'];
 			            $_SESSION['email'] = $info['email'];
 			            $_SESSION['pseudo'] = $info['pseudo'];
-			            header('Location:profil.php?id='.$_SESSION['id']);
-			            $error ="ok!";
+			            header('Location:index.php?admin='.$_SESSION['admin'] . "ok");
+						$error ="ok!";
+						$_SESSION['isAdmin']=1;
 	       	}
 		} else {
 					$error = "Identifiants invalides!";
+					$_SESSION['isAdmin']=0;
 		}
 	} else {
 		$error = "Tous les champs sont obligatoires.";
@@ -49,19 +55,19 @@ if(isset($_POST['submitBtn']) ) {
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-	<link rel="stylesheet" href="css/form.css">
+	<link rel="stylesheet" href="../css/form.css">
 </head>
 <body>
 
 	<div class="main">
 	  <div class="header">
-	     <h4>Connexion</h4>
-	     <p>A notre super site.</p>
+	     <h4>Connexion - Administrateur.</h4>
+	     <p>Réserver au membre ! </p>
 	  </div>
 
-		<form method="POST" action="#" enctype="multipart/form-data" id='login-form' class="form">
+				<form method="POST" action="#" enctype="multipart/form-data" id='login-form' class="form">
 	       <div class="input-group">
-	          <input type="email"  placeholder="" name="email" value="<?php if(isset($_POST['email'])) echo $_POST['email'];?>" required>
+	          <input type="text"  placeholder="" name="email" value="<?php if(isset($_POST['email'])) echo $_POST['email'];?>" required>
 	          <span class="highlight"></span>
 	          <span class="bar"></span>
 	          <label>Email</label>

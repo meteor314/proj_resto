@@ -2,6 +2,9 @@
 	session_start();
 	require('connect_db.php');
 	include 'navbar.html';
+	if(empty($_SESSION['id'])){
+		header('Location:index.html');
+	}
 
 
 
@@ -10,16 +13,56 @@
 <html>
 <head>
 	<title></title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script  src="https://code.jquery.com/jquery-3.5.1.js"  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="  crossorigin="anonymous"></script>
+
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:Condensed" />
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
-
-
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type='text/css'>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript" src="script.js"></script>
 
 </head>
 <body>
+
+<!-- Pop up modal -->
+
+<!-- Modal -->
+<div style="margin:auto; max-width :100px;">
+	<a href="#myModal"  class="btn btn-primary" data-toggle="modal" style="align:center;">Commander un plat! </a>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"style="margin-top : 100px;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h4 class="modal-title" id="myModalLabel">Merci de nous avoir choisi !</h4>
+		<form method="POST" action="#" enctype="multipart/form-data" id='login-form' class="form">
+	       <div class="input-group">
+	          
+			  <label>Nombre de personne : </label>
+			  <input type="number" style="padding :17Px; width:500px" id="nbCount" placeholder="Veuillez choisir le nombre de personne." max="10" min="0" name="nbCount" value="1" required>
+	          <span class="highlight"></span>
+			  <span class="bar"></span>
+			  <h4 id="price"> </h4>
+	        </div>
+      </div>
+      <div >
+        
+        
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="container">
 	<div class="whole">
 	<div class="type">
@@ -95,9 +138,29 @@
 </div>
 
 
-
 </body>
 </html>
+
+<script>
+
+	(function(){
+		var nbCount  = parseInt((document.getElementById('nbCount').value));
+		if(typeof(nbCount)=="number") {
+			if(nbCount >=1 && nbCount <=10)  {
+				var price = nbCount * 24 -nbCount;
+				document.getElementById("price").innerHTML="Le prix de vos plats vous coute : " + price;			
+			}else{
+				document.getElementById("price").innerHTML=("10 personnes maximum  ! " );
+			}
+		} else {
+			document.getElementById("price").innerHTML="Veuillez entrer un nombre !";
+		}
+		
+		setTimeout(arguments.callee, 500);
+	})();
+
+</script>
+
 
 <style media="screen">
   body{

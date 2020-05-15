@@ -15,7 +15,7 @@ function secure($n){
 if(isset($_POST['submitBtn'])) {
 	if(!empty($_POST['userName']) AND !empty($_POST['email']) AND !empty($_POST['pwd']) AND !empty($_POST['pwd2']) AND !empty($_POST["birthDay"]) ) {
 
-	 $brithDay = secure($_POST['brithDay']);
+	 //$brithDay = secure($_POST['brithDay']);
 	 $email = secure($_POST['email']);
 	 $userName = secure($_POST['userName']);
 	 $pwd = ($_POST['pwd']);
@@ -40,7 +40,7 @@ if(isset($_POST['submitBtn'])) {
 		  							  $insert  = $db->prepare("INSERT INTO member (pseudo, email, pwd, date_time_register, vide) VALUES (?,?,?,CURDATE(), ?)");
 			  							$insert->execute(array($userName, $email, $pwd,0));
 			  							$_SESSION['email'] = $email;
-					            header('Location: profil.php?id='.$_SESSION['id']);
+					            		header('Location:connexion.php?id=' . $_SESSION['id']);
 		  						} else {
 		  							$error = "Avez-vous accepté la condition générales d'utilisation ?";
 		  						}
