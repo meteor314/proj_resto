@@ -29,7 +29,7 @@ if(isset($_POST['submitBtn']) ) {
 	  	if($email  ==  "admin") {
 			echo($email);
 	  		$info = $request->fetch();
-	  		var_dump($info);//($info);
+	  		//var_dump($info);//($info);
 		    if($pwd == "admin") {
 		        $userinfo = $request->fetch();
 		          // confirm mail

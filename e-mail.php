@@ -1,15 +1,14 @@
 <?php
 session_start();
 require('connect_db.php');
+if($_SESSION['id'] != 1) {
+	exit();
+}
             require 'email/class.phpmailer.php';
 			require 'email/class.smtp.php';
 			$mail = new PHPMailer;
 			$mail->CharSet = 'UTF-8';
-			$sql="SELECT email FROM member";
-			foreach ($db->query($sql) as $row) {
-				$mail->AddAddress($row['email']);
-			  print_r($row['email']);
-			}
+			$mail->AddAddress($_GET['email']);		 
 			$txt = '
 				<div style=" background:#eee;" align="center"> <br />
 				
@@ -40,11 +39,7 @@ require('connect_db.php');
 			if(!$mail->send()) {
 			  	$error =  'Email is not sent.  PLease try again! <br />';
 			  	$error =  'Email error: ' . $mail->ErrorInfo;
-		      	//$error = $db->prepare("DELETE FROM member WHERE email = ?" );
-		      	//$error->execute(array($email) );
 			} else {
 			  $error =  'Email has been sent. ';    
-	           // $updateText = $db->prepare("UPDATE member SET token = 3 WHERE email = ?");
-	            //$updateText->execute(array($email) );
 			}
 /* send email */

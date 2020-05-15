@@ -1,9 +1,44 @@
 <?php
 	session_start();
+	/* =============== Data base connexion =============*/
+	try {
+		$db =new PDO("mysql:host=localhost;dbname=proj_resto",'root','');
+		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	} catch (PDOException $e) {
+		echo $e->getMessage();
+	}
+
+	function secure($n){
+			$n = htmlspecialchars($n);
+			$n = stripcslashes($n);
+			$n = strip_tags($n);
+			$n = trim($n);
+			return $n;
+	}
+
 	require('connect_db.php');
 	include 'navbar.html';
 	if(empty($_SESSION['id'])){
 		header('Location:index.html');
+		exit();
+	} else {
+		$req = $db->prepare("SELECT * FROM member WHERE id = ?");
+		$req->execute(array($_SESSION['id']));
+		$userinfo = $req->fetch();
+	}
+	
+	if(isset($_POST["submitBtn"])) {
+		if(!empty($_POST["nbCount"])) {
+
+			$nbCount  = (int) $_POST['nbCount'];
+			if($nbCount >=1 && nbCount <= 10) {
+				$insert  = $db->prepare("INSERT INTO Commande (nom, email, isConfirm, nbCount) VALUES (?,?,?,?)");
+				$insert->execute(array($userinfo['pseudo'], $userinfo['email'], 0, $nbCount));
+				header('Location:success.html' );
+			}				
+				
+		}
 	}
 
 
@@ -34,34 +69,28 @@
 	<a href="#myModal"  class="btn btn-primary" data-toggle="modal" style="align:center;">Commander un plat! </a>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"style="margin-top : 100px;">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<h4 class="modal-title" id="myModalLabel">Merci de nous avoir choisi !</h4>
-		<form method="POST" action="#" enctype="multipart/form-data" id='login-form' class="form">
-	       <div class="input-group">
-	          
-			  <label>Nombre de personne : </label>
-			  <input type="number" style="padding :17Px; width:500px" id="nbCount" placeholder="Veuillez choisir le nombre de personne." max="10" min="0" name="nbCount" value="1" required>
-	          <span class="highlight"></span>
-			  <span class="bar"></span>
-			  <h4 id="price"> </h4>
-	        </div>
-      </div>
-      <div >
-        
-        
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-         
-      </div>
-    </div>
-  </div>
-</div>
+<form method="POST" action="#"id='login-form' class="form">	      
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"style="margin-top : 100px;">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Merci de nous avoir choisi !</h4>
+					<div class="input-group">				
+						<label>Nombre de personne : </label>
+						<input type="number" style="padding :17Px; width:500px" id="nbCount" placeholder="Veuillez choisir le nombre de personne." max="10" min="0" name="nbCount" value="2" required>
+						<span class="highlight"></span>
+						<span class="bar"></span>
+						<h4 id="price"> </h4>
+					</div>
+				</div>
+			<div class="modal-footer">
+				<button type="submit" " name="submitBtn"  >Commander  !</button>
+			</div>
+		</div>
+		</div>
+	</div>
+</form>
 
 <div id="container">
 	<div class="whole">
@@ -147,7 +176,7 @@
 		var nbCount  = parseInt((document.getElementById('nbCount').value));
 		if(typeof(nbCount)=="number") {
 			if(nbCount >=1 && nbCount <=10)  {
-				var price = nbCount * 24 -nbCount;
+				var price = nbCount * 24 -nbCount-1;
 				document.getElementById("price").innerHTML="Le prix de vos plats vous coute : " + price;			
 			}else{
 				document.getElementById("price").innerHTML=("10 personnes maximum  ! " );
