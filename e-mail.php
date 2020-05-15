@@ -45,4 +45,6 @@ if($_SESSION['id'] != 1) {
 
 			$upadate = $db->prepare("UPDATE Commande SET isConfirm = ? WHERE email = ?");
 			$upadate->execute(array(1, $_GET['email']));
+
+header('Location:success.html?email=' . $userinfo['email'] );
 /* send email */
