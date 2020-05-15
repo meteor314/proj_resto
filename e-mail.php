@@ -33,9 +33,9 @@ if($_SESSION['id'] != 1) {
 			$mail->SMTPAuth = true;
 			$mail->Port = 465;
 			//existing gmail address as user name
-			$mail->Username = 'meteor31415@gmail.com';
+			$mail->Username = '****gmail.com';
 			//Set the password of  gmail address here
-			$mail->Password = 'rrhnzncaijqzvids';
+			$mail->Password = '*******';
 			if(!$mail->send()) {
 			  	$error =  'Email is not sent.  PLease try again! <br />';
 			  	$error =  'Email error: ' . $mail->ErrorInfo;
